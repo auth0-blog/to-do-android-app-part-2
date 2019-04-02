@@ -8,29 +8,28 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.auth0.todo.R;
+import com.auth0.todo.ToDoItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ToDoListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    private List<String> toDoList = new ArrayList<>();
+    private List<ToDoItem> toDoList = new ArrayList<>();
 
     public ToDoListAdapter(Context context) {
-        toDoList.add("My first task");
-        toDoList.add("My second task");
         inflater = LayoutInflater.from(context);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        String message = (String) getItem(position);
+        ToDoItem toDoItem = (ToDoItem) getItem(position);
         if (view == null) {
             view = inflater.inflate(R.layout.to_do_item, null);
         }
 
         TextView textView = view.findViewById(R.id.to_do_message);
-        textView.setText(message);
+        textView.setText(toDoItem.getMessage());
 
         return view;
     }
@@ -50,8 +49,8 @@ public class ToDoListAdapter extends BaseAdapter {
         return toDoList.size();
     }
 
-    public void addItem(String newItem) {
-        toDoList.add(newItem);
+    public void setToDoList(List<ToDoItem> toDoList) {
+        this.toDoList = toDoList;
         notifyDataSetChanged();
     }
 }
