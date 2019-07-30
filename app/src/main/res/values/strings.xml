@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Digio</string>
     <string name="button_insert">Insert</string>
-    <string name="login">Log In</string>
-    <string name="logout">Log Out</string>
+    <string name="login">Entrar</string>
+    <string name="logout">Sair</string>
     <string name="com_auth0_client_id">L4UMug7d1wogmwHyqtF7NWix5bDdp1oF</string>
     <string name="com_auth0_domain">digio-sample.auth0.com</string>
 </resources>

@@ -1,10 +1,11 @@
 package com.auth0.todo.util;
 
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.auth0.todo.identity.AuthenticationHandler;
 
-public class LogoutListener implements MenuItem.OnMenuItemClickListener {
+public class LogoutListener implements Button.OnClickListener {
     private AuthenticationHandler authenticationHandler;
 
     public LogoutListener(AuthenticationHandler authenticationHandler) {
@@ -12,8 +13,7 @@ public class LogoutListener implements MenuItem.OnMenuItemClickListener {
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public void onClick(View v) {
         authenticationHandler.logout();
-        return true;
     }
 }

@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import com.auth0.android.Auth0;
+import com.auth0.android.Auth0Exception;
 import com.auth0.android.authentication.AuthenticationAPIClient;
 import com.auth0.android.authentication.AuthenticationException;
 import com.auth0.android.authentication.storage.CredentialsManagerException;
@@ -17,6 +18,7 @@ import com.auth0.android.callback.BaseCallback;
 import com.auth0.android.management.ManagementException;
 import com.auth0.android.management.UsersAPIClient;
 import com.auth0.android.provider.AuthCallback;
+import com.auth0.android.provider.VoidCallback;
 import com.auth0.android.provider.WebAuthProvider;
 import com.auth0.android.result.Credentials;
 import com.auth0.android.result.UserProfile;
@@ -50,15 +52,37 @@ public class AuthenticationHandler implements AuthCallback, BaseCallback<Credent
     }
 
     public void logout() {
-        credentialsManager.clearCredentials();
-        originalActivity.runOnUiThread(new Runnable() {
+        WebAuthProvider.logout(auth0)
+                .withScheme("to-do")
+                .start(originalActivity, new VoidCallback() {
             @Override
-            public void run() {
-                String message = "See you soon!";
-                Toast.makeText(originalActivity, message, Toast.LENGTH_SHORT).show();
+            public void onSuccess(Void payload) {
+                credentialsManager.clearCredentials();
+                originalActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String message = "See you soon!";
+                        Toast.makeText(originalActivity, message, Toast.LENGTH_SHORT).show();
 
-                if (originalActivity instanceof MainActivity) return;
-                originalActivity.startActivity(new Intent(originalActivity, MainActivity.class));
+                        if (originalActivity instanceof MainActivity) return;
+                        originalActivity.startActivity(new Intent(originalActivity, MainActivity.class));
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(final Auth0Exception error) {
+                // Log out canceled, keep the user logged in
+                originalActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String message = error.getMessage();
+                        Toast.makeText(originalActivity, message, Toast.LENGTH_SHORT).show();
+
+                        if (originalActivity instanceof MainActivity) return;
+                        originalActivity.startActivity(new Intent(originalActivity, MainActivity.class));
+                    }
+                });
             }
         });
     }
@@ -103,6 +127,8 @@ public class AuthenticationHandler implements AuthCallback, BaseCallback<Credent
                                         Intent profileIntent = new Intent(originalActivity, ProfileActivity.class);
                                         profileIntent.putExtra("profilePicture", profile.getPictureURL());
                                         profileIntent.putExtra("username", profile.getEmail());
+                                        profileIntent.putExtra("name", (String) profile.getUserMetadata().get("name"));
+                                        profileIntent.putExtra("birthdate", (String) profile.getUserMetadata().get("birthdate"));
                                         originalActivity.startActivity(profileIntent);
                                     }
 

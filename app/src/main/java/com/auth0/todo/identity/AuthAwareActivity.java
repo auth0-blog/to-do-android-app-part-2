@@ -12,6 +12,5 @@ public abstract class AuthAwareActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.authenticationHandler = new AuthenticationHandler(this);
-
     }
 }
